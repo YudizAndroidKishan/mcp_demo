@@ -1,1 +1,1 @@
-class Login {}
+class Login extends StatelessWidget {}
