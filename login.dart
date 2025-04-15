@@ -1,1 +1,6 @@
-class Login extends StatelessWidget {}
+class Login extends StatelessWidget with WidgetsBindingObserver {
+                @override
+                Widget build(BuildContext context) {
+                    return Container();
+                }
+            }
