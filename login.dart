@@ -1,1 +1,1 @@
-class Login extends StatelessWidget with WidgetsBindingObserver {}
+class Login extends StatelessWidget {}
