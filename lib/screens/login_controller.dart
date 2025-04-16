@@ -11,7 +11,7 @@ class LoginController with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  // Simulate a login service (replace with your actual API call)
+  // Simulate a login service (replace with your actual API call) //
   Future<bool> _loginService(String username, String password) async {
     // Simulate network delay
     await Future.delayed(const Duration(seconds: 1));
