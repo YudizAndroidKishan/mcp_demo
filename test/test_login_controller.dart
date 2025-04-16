@@ -1,28 +1,67 @@
-A command-line utility for Dart development.
+dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:myapp/screens/login_controller.dart';
 
-Usage: dart <command|dart-file> [arguments]
+class MockLoginService extends Mock {
+  Future<bool> call(String username, String password);
+}
 
-Global options:
--v, --verbose               Show additional command output.
-    --version               Print the Dart SDK version.
-    --enable-analytics      Enable analytics.
-    --disable-analytics     Disable analytics.
-    --suppress-analytics    Disallow analytics for this `dart *` run without changing the analytics configuration.
--h, --help                  Print this usage information.
+void main() {
+  group('LoginController', () {
+    late LoginController controller;
+    late MockLoginService mockLoginService;
 
-Available commands:
-  analyze    Analyze Dart code in a directory.
-  compile    Compile Dart to various formats.
-  create     Create a new Dart project.
-  devtools   Open DevTools (optionally connecting to an existing application).
-  doc        Generate API documentation for Dart projects.
-  fix        Apply automated fixes to Dart source code.
-  format     Idiomatically format Dart source code.
-  info       Show diagnostic information about the installed tooling.
-  pub        Work with packages.
-  run        Run a Dart program.
-  test       Run tests for a project.
+    setUp(() {
+      mockLoginService = MockLoginService();
+      controller = LoginController();
+      when(mockLoginService('admin', 'password123')).thenAnswer((_) async => true);
+      when(mockLoginService(any, any)).thenAnswer((_) async => false);
 
-Run "dart help <command>" for more information about a command.
-See https://dart.dev/tools/dart-tool for detailed documentation.
+    });
+
+    test('updateUsername updates username', () {
+      controller.updateUsername('testuser');
+      expect(controller.username, 'testuser');
+    });
+
+    test('updatePassword updates password', () {
+      controller.updatePassword('testpass');
+      expect(controller.password, 'testpass');
+    });
+
+    test('login sets isLoading to true', () async {
+      expect(controller.isLoading, false);
+      await controller.login();
+      expect(controller.isLoading, false);
+    });
+
+    test('successful login returns true', () async {
+      controller.updateUsername('admin');
+      controller.updatePassword('password123');
+      final result = await controller.login();
+      expect(result, true);
+      expect(controller.errorMessage, null);
+    });
+
+    test('failed login returns false and sets errorMessage', () async {
+      controller.updateUsername('wronguser');
+      controller.updatePassword('wrongpass');
+      final result = await controller.login();
+      expect(result, false);
+      expect(controller.errorMessage, 'Invalid username or password');
+    });
+
+    test('resetState resets the controller', () {
+      controller.updateUsername('testuser');
+      controller.updatePassword('testpass');
+      controller.resetState();
+      expect(controller.username, '');
+      expect(controller.password, '');
+      expect(controller.isLoading, false);
+      expect(controller.errorMessage, null);
+    });
+  });
+}
+
 
