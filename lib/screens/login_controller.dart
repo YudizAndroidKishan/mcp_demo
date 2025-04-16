@@ -17,7 +17,7 @@ class LoginController with ChangeNotifier {
     await Future.delayed(const Duration(seconds: 1));
 
     // Simple hardcoded check for demonstration purposes
-    if (username == 'testuser' && password == 'password123') {
+    if (username == 'admin' && password == 'password123') {
       return true;
     } else {
       return false;
